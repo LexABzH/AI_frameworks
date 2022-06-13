@@ -1,6 +1,11 @@
 # **\*\*WORK IN PROGRESS - UPDATE COMING SOON \*\***
 
 ![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/nlp_build_tests.yaml/badge.svg)
+![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/num_build_tests.yaml/badge.svg)
+![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/vision_build_tests.yaml/badge.svg)
+![example workflow](https://github.com/OSS-Pole-Emploi/words_n_fun/actions/workflows/wnf_build_tests.yaml/badge.svg)
+![example workflow](https://github.com/OSS-Pole-Emploi/words_n_fun/actions/workflows/wnf_linter.yaml/badge.svg)
+words_n_fun
 
 # Gabarit - Templates Data Science - Agence Data Services
 
