@@ -1,5 +1,7 @@
 # **\*\*WORK IN PROGRESS - UPDATE COMING SOON \*\***
 
+![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/nlp_build_tests.yaml/badge.svg)
+
 # Gabarit - Templates Data Science - Agence Data Services
 
 # Licence
