@@ -24,19 +24,14 @@ import os
 import json
 import shutil
 import logging
-import numpy as np
-import pandas as pd
 import dill as pickle
 from typing import Union, List, Callable
 
-import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model as load_model_keras
-from tensorflow.keras.layers import (ELU, BatchNormalization, Conv1D, Dense, Dropout,
-                                     Input, LeakyReLU, ReLU)
+from tensorflow.keras.layers import ELU, BatchNormalization, Dense, Dropout, Input
 
-from {{package_name}} import utils
 from {{package_name}}.models_training import utils_deep_keras
 from {{package_name}}.models_training.model_keras import ModelKeras
 from {{package_name}}.models_training.classifiers.model_classifier import ModelClassifierMixin  # type: ignore
@@ -88,8 +83,8 @@ class ModelDenseClassifier(ModelClassifierMixin, ModelKeras):
         # Set optimizer
         lr = self.keras_params['learning_rate'] if 'learning_rate' in self.keras_params.keys() else 0.001
         decay = self.keras_params['decay'] if 'decay' in self.keras_params.keys() else 0.0
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
         optimizer = Adam(lr=lr, decay=decay)
 
         # Set loss & metrics

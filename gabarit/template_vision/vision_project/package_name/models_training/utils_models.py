@@ -127,7 +127,7 @@ def remove_small_classes(df: pd.DataFrame, col: Union[str, int], min_rows: int =
     classes_to_remove = list(v_count[v_count < min_rows].index.values)
     for cl in classes_to_remove:
         logger.warning(f"/!\\ /!\\ /!\\ Class {cl} has less than {min_rows} lines in the training set.")
-        logger.warning(f"/!\\ /!\\ /!\\ This class is automatically removed from the dataset.")
+        logger.warning("/!\\ /!\\ /!\\ This class is automatically removed from the dataset.")
     return df[~df[col].isin(classes_to_remove)]
 
 
@@ -182,7 +182,6 @@ def load_model(model_dir: str, is_path: bool = False) -> Tuple[Any, dict]:
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Can't find model {model_path} (considered as a path)")
 
-
     # Get configs
     configuration_path = os.path.join(model_path, 'configurations.json')
     with open(configuration_path, 'r', encoding='{{default_encoding}}') as f:
@@ -207,7 +206,7 @@ def load_model(model_dir: str, is_path: bool = False) -> Tuple[Any, dict]:
 
     # Check for keras model
     if os.path.exists(hdf5_path):
-        # Si on a définit une fonction spéciale (faster RCNN), on l'utilise
+        # If a specific reload function has been defined (e.g. faster RCNN), we use it
         if hasattr(model, 'reload_models_from_hdf5'):
             model.reload_models_from_hdf5(hdf5_path)
         else:
@@ -305,7 +304,6 @@ def predict(data_input: Union[str, List[str], np.ndarray, pd.DataFrame], model, 
     else:
         raise ValueError(f"Input type ({type(data_input)}) is not a valid type option.")
 
-
     ##############################################
     # Apply preprocessing
     ##############################################
@@ -319,7 +317,6 @@ def predict(data_input: Union[str, List[str], np.ndarray, pd.DataFrame], model, 
 
     # Preprocess
     images_preprocessed = preprocessor(images)
-
 
     ##############################################
     # Save all preprocessed images in a temporary directory
@@ -339,7 +336,6 @@ def predict(data_input: Union[str, List[str], np.ndarray, pd.DataFrame], model, 
         predictions, probas = model.predict_with_proba(df)
 
     # Getting out of the context, all temporary data is deleted
-
 
     ##############################################
     # Return result

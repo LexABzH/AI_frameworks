@@ -26,27 +26,20 @@ import pickle
 import shutil
 import logging
 import numpy as np
-import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
 from typing import Union, Any, List, Callable
 
-import tensorflow as tf
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.models import load_model as load_model_keras
-from tensorflow.keras.layers import (ELU, LSTM, AveragePooling1D,
-                                            BatchNormalization, Bidirectional,
-                                            Conv1D, Dense, Dropout, Embedding,
-                                            Flatten, GlobalAveragePooling1D,
-                                            GlobalMaxPooling1D, Input,
-                                            LeakyReLU, MaxPooling1D, ReLU,
-                                            SpatialDropout1D, add, concatenate)
 from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.models import load_model as load_model_keras
+from tensorflow.keras.layers import (LSTM, BatchNormalization, Bidirectional, Dense, Embedding,
+                                     GlobalAveragePooling1D, GlobalMaxPooling1D, Input,
+                                     SpatialDropout1D, add, concatenate)
 
 from {{package_name}} import utils
+from {{package_name}}.models_training import utils_deep_keras
 from {{package_name}}.models_training.model_keras import ModelKeras
-from {{package_name}}.models_training import utils_deep_keras, utils_models
 
 sns.set(style="darkgrid")
 
@@ -205,8 +198,8 @@ class ModelEmbeddingLstm(ModelKeras):
         model = Model(inputs=words, outputs=[out])
         lr = self.keras_params['learning_rate'] if 'learning_rate' in self.keras_params.keys() else 0.01
         decay = self.keras_params['decay'] if 'decay' in self.keras_params.keys() else 0.004
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
         optimizer = Adam(lr=lr, decay=decay)
         # loss = utils_deep_keras.f1_loss if self.multi_label else 'categorical_crossentropy'
         loss = 'binary_crossentropy' if self.multi_label else 'categorical_crossentropy'  # utils_deep_keras.f1_loss also possible if multi-labels
@@ -242,7 +235,7 @@ class ModelEmbeddingLstm(ModelKeras):
         # Save tokenizer if not None & level_save > LOW
         if (self.tokenizer is not None) and (self.level_save in ['MEDIUM', 'HIGH']):
             # Manage paths
-            tokenizer_path = os.path.join(self.model_dir, f"embedding_tokenizer.pkl")
+            tokenizer_path = os.path.join(self.model_dir, "embedding_tokenizer.pkl")
             # Save as pickle
             with open(tokenizer_path, 'wb') as f:
                 # TODO: use dill to get rid of  "can't pickle ..." errors

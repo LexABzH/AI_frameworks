@@ -89,7 +89,6 @@ class Case1_e2e_pipeline(unittest.TestCase):
         df = pd.read_csv(f"{full_path_lib}/test_template_vision-data/dataset_object_detection_10_samples/metadata_bboxes.csv", sep=';', encoding='utf-8')
         self.assertTrue(df.shape[0] >= 10)  # Potentially several bboxes per image
 
-
     def test02_SplitTrainValidTest(self):
         '''Test of the file 0_split_train_valid_test.py'''
         print("Test of the file 0_split_train_valid_test.py")
@@ -321,7 +320,6 @@ class Case1_e2e_pipeline(unittest.TestCase):
         self.assertGreater(len(file_test_shiba)/len(filelist_test), 0.31)
         self.assertLess(len(file_test_shiba)/len(filelist_test), 0.35)
 
-
     def test03_PreProcessData(self):
         '''Test of the file 1_preprocess_data.py'''
         print("Test of the file 1_preprocess_data.py")
@@ -450,7 +448,7 @@ class Case1_e2e_pipeline(unittest.TestCase):
         dataset_v1 = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/2_training_classifier.py -d dataset_v1_train_preprocess_docs --directory_valid dataset_v1_valid_preprocess_docs"
         self.assertEqual(subprocess.run(dataset_v1, shell=True).returncode, 0)
         # Check model saved
-        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier') # cnn by default
+        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier')  # cnn by default
         self.assertTrue(os.path.exists(save_model_dir))
         listdir = os.listdir(os.path.join(save_model_dir))
         self.assertGreater(len(listdir), 0)
@@ -459,7 +457,7 @@ class Case1_e2e_pipeline(unittest.TestCase):
         dataset_v2 = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/2_training_classifier.py -d dataset_v2_train"
         self.assertEqual(subprocess.run(dataset_v2, shell=True).returncode, 0)
         # Check model saved
-        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier') # cnn by default
+        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier')  # cnn by default
         self.assertTrue(os.path.exists(save_model_dir))
         listdir = os.listdir(os.path.join(save_model_dir))
         self.assertGreater(len(listdir), 1)
@@ -468,7 +466,7 @@ class Case1_e2e_pipeline(unittest.TestCase):
         dataset_v3 = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/2_training_classifier.py -d dataset_v3_train_preprocess_docs --directory_valid dataset_v3_valid_preprocess_docs"
         self.assertEqual(subprocess.run(dataset_v3, shell=True).returncode, 0)
         # Check model saved
-        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier') # cnn by default
+        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier')  # cnn by default
         self.assertTrue(os.path.exists(save_model_dir))
         listdir = os.listdir(os.path.join(save_model_dir))
         self.assertGreater(len(listdir), 2)
@@ -492,7 +490,7 @@ class Case1_e2e_pipeline(unittest.TestCase):
         model_dir = os.path.join(utils.get_models_path(), model_name, datetime.now().strftime(f"{model_name}_%Y_%m_%d-%H_%M_%S"))
         os.makedirs(model_dir)
         test_model = ModelDetectronFasterRcnnObjectDetector(level_save='HIGH', epochs=1, batch_size=1, rpn_restrict_num_regions=4, model_name=model_name, model_dir=model_dir)
-        test_model.cfg.INPUT.MIN_SIZE_TRAIN = (400,)  # On essaie de diminuer la charge mémoire
+        test_model.cfg.INPUT.MIN_SIZE_TRAIN = (400,)  # We try to limit the memory impact
 
         # Test it
         test.main(directory='dataset_object_detection_mini', directory_valid='dataset_object_detection_mini', model=test_model)
@@ -512,11 +510,11 @@ class Case1_e2e_pipeline(unittest.TestCase):
         ################
 
         # "Basic" case dataset_v1_test
-        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier') # cnn by default
+        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier')  # cnn by default
         listdir = os.listdir(os.path.join(save_model_dir))
         model_name = listdir[0]
-        fonctionnement_basique = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v1_test -m {model_name}"
-        self.assertEqual(subprocess.run(fonctionnement_basique, shell=True).returncode, 0)
+        basic_run = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v1_test -m {model_name}"
+        self.assertEqual(subprocess.run(basic_run, shell=True).returncode, 0)
         # Check predictions
         save_predictions_dir = os.path.join(full_path_lib, 'test_template_vision-data', 'predictions', 'dataset_v1_test')
         self.assertTrue(os.path.exists(save_predictions_dir))
@@ -524,8 +522,8 @@ class Case1_e2e_pipeline(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(save_predictions_dir, listdir[0], 'predictions.csv')))
 
         # "Basic" case dataset_v2_test
-        fonctionnement_basique = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v2_test -m {model_name}"
-        self.assertEqual(subprocess.run(fonctionnement_basique, shell=True).returncode, 0)
+        basic_run = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v2_test -m {model_name}"
+        self.assertEqual(subprocess.run(basic_run, shell=True).returncode, 0)
         # Check predictions
         save_predictions_dir = os.path.join(full_path_lib, 'test_template_vision-data', 'predictions', 'dataset_v2_test')
         self.assertTrue(os.path.exists(save_predictions_dir))
@@ -533,8 +531,8 @@ class Case1_e2e_pipeline(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(save_predictions_dir, listdir[0], 'predictions.csv')))
 
         # "Basic" case dataset_v3_valid
-        fonctionnement_basique = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v3_valid -m {model_name}"
-        self.assertEqual(subprocess.run(fonctionnement_basique, shell=True).returncode, 0)
+        basic_run = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_v3_valid -m {model_name}"
+        self.assertEqual(subprocess.run(basic_run, shell=True).returncode, 0)
         # Check predictions
         save_predictions_dir = os.path.join(full_path_lib, 'test_template_vision-data', 'predictions', 'dataset_v3_valid')
         self.assertTrue(os.path.exists(save_predictions_dir))
@@ -554,8 +552,8 @@ class Case1_e2e_pipeline(unittest.TestCase):
         save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_detectron_faster_rcnn_e2e')
         listdir = os.listdir(os.path.join(save_model_dir))
         model_name = listdir[0]
-        fonctionnement_basique = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_object_detection_mini -m {model_name}"
-        self.assertEqual(subprocess.run(fonctionnement_basique, shell=True).returncode, 0)
+        basic_run = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/3_predict.py -d dataset_object_detection_mini -m {model_name}"
+        self.assertEqual(subprocess.run(basic_run, shell=True).returncode, 0)
         # Check predictions
         save_predictions_dir = os.path.join(full_path_lib, 'test_template_vision-data', 'predictions', 'dataset_object_detection_mini')
         self.assertTrue(os.path.exists(save_predictions_dir))
@@ -567,11 +565,11 @@ class Case1_e2e_pipeline(unittest.TestCase):
         print("Test of the file 0_reload_model.py")
 
         # "Basic" case
-        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier') # cnn by default
+        save_model_dir = os.path.join(full_path_lib, 'test_template_vision-models', 'model_cnn_classifier')  # cnn by default
         listdir = os.listdir(os.path.join(save_model_dir))
         model_name = listdir[0]
-        fonctionnement_basique = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/utils/0_reload_model.py -m {model_name}"
-        self.assertEqual(subprocess.run(fonctionnement_basique, shell=True).returncode, 0)
+        basic_run = f"{activate_venv}python {full_path_lib}/test_template_vision-scripts/utils/0_reload_model.py -m {model_name}"
+        self.assertEqual(subprocess.run(basic_run, shell=True).returncode, 0)
         self.assertGreater(len(listdir), 2)
 
 
@@ -598,8 +596,8 @@ class ModelMockCnnClassifier(ModelCnnClassifier):
         # Set optimizer
         lr = self.keras_params['learning_rate'] if 'learning_rate' in self.keras_params.keys() else 0.001
         decay = self.keras_params['decay'] if 'decay' in self.keras_params.keys() else 0.0
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
         optimizer = tf.keras.optimizers.Adam(lr=lr, decay=decay)
         # Compile model
         model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
@@ -658,7 +656,7 @@ def test_model_mono_class_mono_label(test_class, test_model):
     test_class.assertEqual(list(test_model.get_classes_from_proba(probas)), ['Un', 'Zero'])
     # get_top_n_from_proba
     with test_class.assertRaises(ValueError):
-        test_model.get_top_n_from_proba(probas, n=5) # Only 2 classes in our model
+        test_model.get_top_n_from_proba(probas, n=5)  # Only 2 classes in our model
     top_n, top_n_proba = test_model.get_top_n_from_proba(probas, n=2)
     test_class.assertEqual([list(_) for _ in top_n], [['Un', 'Zero'], ['Zero', 'Un']])
     test_class.assertEqual([list(_) for _ in top_n_proba], [[probas[0][index_un], probas[0][index_zero]], [probas[1][index_zero], probas[1][index_un]]])
@@ -671,7 +669,7 @@ class Case2_MonoClassMonoLabel(unittest.TestCase):
 
 
     def setUp(self):
-        '''On essaie de clean la mémoire'''
+        '''We try to clear the used memory'''
         gc.collect()
         tf.keras.backend.clear_session()
 
@@ -794,7 +792,7 @@ def test_model_multi_class_mono_label(test_class, test_model):
     test_class.assertEqual(list(preds), ['Quatre', 'Un', 'Zero'])
     # predict_proba
     probas = test_model.predict_proba(df)
-    test_class.assertEqual(round(probas.sum(), 3), 3.) # We round for deep learning models
+    test_class.assertEqual(round(probas.sum(), 3), 3.)  # We round for deep learning models
     test_class.assertGreater(probas[0][index_quatre], 1/3)
     test_class.assertLess(probas[0][index_un], probas[0][index_quatre])
     test_class.assertLess(probas[0][index_zero], probas[0][index_quatre])
@@ -806,7 +804,7 @@ def test_model_multi_class_mono_label(test_class, test_model):
     test_class.assertGreater(probas[2][index_zero], 1/3)
     # predict w/ return_proba=True
     probas2 = test_model.predict(df, return_proba=True)
-    test_class.assertEqual(round(probas2.sum(), 3), 3.) # We round for deep learning models
+    test_class.assertEqual(round(probas2.sum(), 3), 3.)  # We round for deep learning models
     test_class.assertGreater(probas2[0][index_quatre], 1/3)
     test_class.assertLess(probas2[0][index_un], probas2[0][index_quatre])
     test_class.assertLess(probas2[0][index_zero], probas2[0][index_quatre])
@@ -819,7 +817,7 @@ def test_model_multi_class_mono_label(test_class, test_model):
     # predict_with_proba
     pred_proba = test_model.predict_with_proba(df)
     test_class.assertEqual(list(pred_proba[0]), ['Quatre', 'Un', 'Zero'])
-    test_class.assertEqual(round(pred_proba[1].sum(), 3), 3.) # We round for deep learning models
+    test_class.assertEqual(round(pred_proba[1].sum(), 3), 3.)  # We round for deep learning models
     test_class.assertGreater(pred_proba[1][0][index_quatre], 1/3)
     test_class.assertLess(pred_proba[1][0][index_un], pred_proba[1][0][index_quatre])
     test_class.assertLess(pred_proba[1][0][index_zero], pred_proba[1][0][index_quatre])
@@ -838,7 +836,7 @@ def test_model_multi_class_mono_label(test_class, test_model):
     test_class.assertEqual(list(test_model.get_classes_from_proba(probas)), ['Quatre', 'Un', 'Zero'])
     # get_top_n_from_proba
     with test_class.assertRaises(ValueError):
-        test_model.get_top_n_from_proba(probas, n=5) # Only 3 classes in our model
+        test_model.get_top_n_from_proba(probas, n=5)  # Only 3 classes in our model
     top_n, top_n_proba = test_model.get_top_n_from_proba(probas, n=3)
     test_class.assertEqual([_[0] for _ in top_n], ['Quatre', 'Un', 'Zero'])
     test_class.assertEqual(sorted(top_n[0]), sorted(['Quatre', 'Un', 'Zero']))
@@ -854,7 +852,7 @@ class Case3_MultiClassMonoLabel(unittest.TestCase):
 
 
     def setUp(self):
-        '''On essaie de clean la mémoire'''
+        '''We try to clear the used memory'''
         gc.collect()
         tf.keras.backend.clear_session()
 
@@ -952,7 +950,7 @@ class Case4_ObjectDetection(unittest.TestCase):
 
 
     def setUp(self):
-        '''On essaie de clean la mémoire'''
+        '''We try to clear the used memory'''
         gc.collect()
         tf.keras.backend.clear_session()
 
@@ -994,7 +992,7 @@ class Case4_ObjectDetection(unittest.TestCase):
             os.makedirs(model_dir)
             # We train on only 1 epoch. It is far too long otherwise. We will not evaluate performances
             test_model = ModelDetectronFasterRcnnObjectDetector(level_save='HIGH', epochs=1, batch_size=1, rpn_restrict_num_regions=4, model_name=model_name, model_dir=model_dir)
-            test_model.cfg.INPUT.MIN_SIZE_TRAIN = (400,)  # On essaie de diminuer la charge mémoire
+            test_model.cfg.INPUT.MIN_SIZE_TRAIN = (400,)  # We try to limit the memory impact
 
             # Test it
             test.main(directory='dataset_object_detection_mini_preprocess_docs', directory_valid='dataset_object_detection_mini_preprocess_docs', model=test_model)

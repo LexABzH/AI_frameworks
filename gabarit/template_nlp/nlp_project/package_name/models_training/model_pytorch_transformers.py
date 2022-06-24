@@ -21,15 +21,11 @@
 
 import os
 import json
-import pickle
 import shutil
 import logging
 import numpy as np
-import pandas as pd
 import seaborn as sns
 from tqdm import tqdm
-from functools import partial
-import matplotlib.pyplot as plt
 from typing import no_type_check, Union, Callable, Any, Tuple
 
 import torch
@@ -39,7 +35,7 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data.dataset import TensorDataset
 from torch.utils.data.sampler import RandomSampler
-from transformers import AdamW, AutoModel, AutoTokenizer, AutoConfig, AutoModelForSequenceClassification
+from transformers import AdamW, AutoTokenizer, AutoConfig, AutoModelForSequenceClassification
 
 from {{package_name}} import utils
 from {{package_name}}.models_training import utils_deep_torch
@@ -55,9 +51,8 @@ class ModelPyTorchTransformers(ModelPyTorch):
     _default_name = 'model_pytorch_transformers'
 
     def __init__(self, transformer_name: Union[str, None] = None, max_sequence_length: int = 256,
-                 tokenizer_special_tokens: Union[tuple, None] = None,
-                 padding: str = "max_length", truncation: bool = True,
-                  **kwargs) -> None:
+                 tokenizer_special_tokens: Union[tuple, None] = None, padding: str = "max_length",
+                 truncation: bool = True, **kwargs) -> None:
         '''Initialization of the class (see ModelClass & ModelPyTorch for more arguments)
 
         Args:
@@ -121,7 +116,7 @@ class ModelPyTorchTransformers(ModelPyTorch):
             self.model.train()
         # Predictions with DataLoader (slower when considering a small number of data)
         else:
-            test_dl = self._get_test_dataloader(self.batch_size, x_test, y_test_dummies=None) # We can change the batch size
+            test_dl = self._get_test_dataloader(self.batch_size, x_test, y_test_dummies=None)  # We can change the batch size
             trainer = pl.Trainer(default_root_dir=self.model_dir, checkpoint_callback=False, logger=False,
                                  gpus=1 if torch.cuda.is_available() else 0)
             # Test on x_test
@@ -242,13 +237,13 @@ class ModelPyTorchTransformers(ModelPyTorch):
         gradient_clip_val = self.pytorch_params.get('gradient_clip_val', 1.0)
         warmup_proportion = self.pytorch_params.get('warmup_proportion', 0.2)
         run_lr_scheduler = self.pytorch_params.get('run_lr_scheduler', False)
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
-        self.logger.info(f"Adam's epsilon utilisé : {adam_epsilon}")
-        self.logger.info(f"Gradient clipping utilisé : {gradient_clip_val}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
+        self.logger.info(f"Adam's epsilon: {adam_epsilon}")
+        self.logger.info(f"Gradient clipping: {gradient_clip_val}")
         if run_lr_scheduler:
-            self.logger.info("Learning rate scheduler used")
-            self.logger.info(f"Warmup proportion used : {warmup_proportion}")
+            self.logger.info("Using a learning rate scheduler")
+            self.logger.info(f"Warmup proportion: {warmup_proportion}")
 
         # Update pytorch_params for saving purposes
         self.pytorch_params['learning_rate'] = lr
@@ -301,7 +296,7 @@ class ModelPyTorchTransformers(ModelPyTorch):
             all_label = None
         return all_input_ids, all_input_mask, all_label
 
-    def _get_train_dataloader(self, batch_size: int, x_train, y_train_dummies = None) -> DataLoader:
+    def _get_train_dataloader(self, batch_size: int, x_train, y_train_dummies=None) -> DataLoader:
         '''Prepares the input data for the model
 
         Args:
@@ -315,7 +310,7 @@ class ModelPyTorchTransformers(ModelPyTorch):
         if all_label is not None:
             train_dataset = TensorDataset(all_input_ids, all_input_mask, all_label)
         else:
-            raise ValueError("Aucun label associé au training set...")
+            raise ValueError("No label associated with the training set...")
         train_dl = DataLoader(train_dataset, num_workers=0, batch_size=batch_size, sampler=RandomSampler(train_dataset))
         return train_dl
 
@@ -471,7 +466,7 @@ class TaskClass(pl.LightningModule):
             adam_epsilon (float): Adam's epsilon to use
             gradient_clip_val (int | float): Gradient clipping value to use
             run_lr_scheduler (bool): Whether a learning rate scheduler should be used
-            warmup_proportion (float): Warmup proportion to use (for learning rate scheduler)
+            warmup_proportion (float): Warmup proportion to be used (for learning rate scheduler)
             train_dataloader_size (int): Number of batch per epochs. Useful to set a learning rate scheduler
         '''
         super(TaskClass, self).__init__()
@@ -533,7 +528,7 @@ class TaskClass(pl.LightningModule):
             lr_scheduler = LambdaLR(optimizer, lr_lambda=utils_deep_torch.LRScheduleWithWarmup(warmup_steps=warmup_steps, total_steps=total_steps))
             return_dict['lr_scheduler'] = {}
             return_dict['lr_scheduler']['scheduler'] = lr_scheduler
-            return_dict['lr_scheduler']['interval'] = 'step' # Update at each step
+            return_dict['lr_scheduler']['interval'] = 'step'  # Update at each step
             return_dict['lr_scheduler']['frequency'] = 1
         # Return dict
         return return_dict
@@ -559,14 +554,14 @@ class TaskClass(pl.LightningModule):
         loss = self.loss_func(logits, label)
         outputs = {
             "val_loss": loss,
-            "logit": logits.cpu().numpy(), # Useful for metrics
-            "label": label.cpu().numpy(), # Useful for metrics
+            "logit": logits.cpu().numpy(),  # Useful for metrics
+            "label": label.cpu().numpy(),  # Useful for metrics
         }
         return outputs
 
     def validation_epoch_end(self, outputs) -> None:
         '''On epochs ends, gets validation metrics'''
-        avg_loss = torch.stack([x["val_loss"] for x in outputs]).mean() # val_loss = loss mean among batches
+        avg_loss = torch.stack([x["val_loss"] for x in outputs]).mean()  # val_loss = loss mean among batches
         y_true = np.vstack([x["label"] for x in outputs])
         logits = np.vstack([x["logit"] for x in outputs])
         probas = self.get_probas_from_logits(logits)
@@ -580,7 +575,7 @@ class TaskClass(pl.LightningModule):
         # Logs metrics
         self.log("val_loss", avg_loss, prog_bar=True, on_step=False, logger=True)
         for col in all_metrics.columns:
-            if col != 'Label' and all_metrics[col].values[0] != None:
+            if col != 'Label' and all_metrics[col].values[0] is not None:
                 self.log(f"val_{col}", all_metrics[col].values[0], prog_bar=True, on_step=False, logger=True)
 
     def test_step(self, batch, batch_idx):

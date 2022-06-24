@@ -24,22 +24,16 @@ import os
 import json
 import shutil
 import logging
-import numpy as np
-import pandas as pd
 import dill as pickle
-from typing import Union, Any, List, Callable
+from typing import Union, List, Callable
 
-import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model as load_model_keras
 from tensorflow.keras.applications.imagenet_utils import preprocess_input
-from tensorflow.keras.layers import (ELU, BatchNormalization, Dense, Dropout, SpatialDropout2D,
-                                     Input, LeakyReLU, ReLU, Conv2D, Flatten,
-                                     MaxPooling2D, AveragePooling2D,
-                                     GlobalMaxPooling2D, GlobalAveragePooling2D)
+from tensorflow.keras.layers import (ELU, BatchNormalization, Dense, Dropout,
+                                     Input, Conv2D, Flatten, AveragePooling2D)
 
-from {{package_name}} import utils
 from {{package_name}}.models_training.model_keras import ModelKeras
 from {{package_name}}.models_training.classifiers.model_classifier import ModelClassifierMixin  # type: ignore
 
@@ -123,8 +117,8 @@ class ModelCnnClassifier(ModelClassifierMixin, ModelKeras):
         # Set optimizer
         lr = self.keras_params['learning_rate'] if 'learning_rate' in self.keras_params.keys() else 0.001
         decay = self.keras_params['decay'] if 'decay' in self.keras_params.keys() else 0.0
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
         optimizer = Adam(lr=lr, decay=decay)
 
         # Set loss & metrics

@@ -25,27 +25,18 @@ import pickle
 import shutil
 import logging
 import numpy as np
-import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-from typing import Union, Any, List, Callable
+from typing import Union, List, Callable
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-import tensorflow as tf
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.models import load_model as load_model_keras
-from tensorflow.keras.layers import (ELU, LSTM, AveragePooling1D,
-                                            BatchNormalization, Bidirectional,
-                                            Conv1D, Dense, Dropout, Embedding,
-                                            Flatten, GlobalAveragePooling1D,
-                                            GlobalMaxPooling1D, Input,
-                                            LeakyReLU, MaxPooling1D, ReLU,
-                                            SpatialDropout1D, concatenate)
+from tensorflow.keras.layers import ELU, BatchNormalization, Dense, Dropout
 
 from {{package_name}} import utils
+from {{package_name}}.models_training import utils_deep_keras
 from {{package_name}}.models_training.model_keras import ModelKeras
-from {{package_name}}.models_training import utils_deep_keras, utils_models
 
 
 sns.set(style="darkgrid")
@@ -152,8 +143,8 @@ class ModelTfidfDense(ModelKeras):
         # Compile model
         lr = self.keras_params.get('learning_rate', 0.002)
         decay = self.keras_params.get('decay', 0.0)
-        self.logger.info(f"Learning rate utilisée : {lr}")
-        self.logger.info(f"Decay utilisé : {decay}")
+        self.logger.info(f"Learning rate: {lr}")
+        self.logger.info(f"Decay: {decay}")
         optimizer = Adam(lr=lr, decay=decay)
         # loss = utils_deep_keras.f1_loss if self.multi_label else 'categorical_crossentropy'
         loss = 'binary_crossentropy' if self.multi_label else 'categorical_crossentropy'  # utils_deep_keras.f1_loss also possible if multi-labels
@@ -190,7 +181,7 @@ class ModelTfidfDense(ModelKeras):
         # Save tfidf if not None & level_save > LOW
         if (self.tfidf is not None) and (self.level_save in ['MEDIUM', 'HIGH']):
             # Manage paths
-            tfidf_path = os.path.join(self.model_dir, f"tfidf_standalone.pkl")
+            tfidf_path = os.path.join(self.model_dir, "tfidf_standalone.pkl")
             # Save as pickle
             with open(tfidf_path, 'wb') as f:
                 # TODO: use dill to get rid of  "can't pickle ..." errors

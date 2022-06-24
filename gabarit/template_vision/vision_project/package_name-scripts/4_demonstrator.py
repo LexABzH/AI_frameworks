@@ -39,6 +39,12 @@ from {{package_name}}.models_training import utils_models
 from {{package_name}}.models_training.model_class import ModelClass
 from {{package_name}}.models_training.object_detectors import utils_object_detectors
 
+# TMP FIX: somehow, a json method prevents us to cache most of our models with Streamlit
+# That was not the case before, something must have changed within a third party library ?
+# Anyway, we'll just add "hash_funcs={'_json.Scanner': hash}" to st.cache when needed.
+# https://docs.streamlit.io/library/advanced-features/caching#the-hash_funcs-parameter
+# https://github.com/streamlit/streamlit/issues/4876
+
 # Get logger
 logger = logging.getLogger('{{package_name}}.4_demonstrator')
 
@@ -101,7 +107,7 @@ if 'input_image_file_area' not in st.session_state:
 # Utils functions
 # ---------------------
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, hash_funcs={'_json.Scanner': hash})
 def load_model(selected_model: str) -> Tuple[Type[ModelClass], dict]:
     '''Loads a model
 
@@ -341,7 +347,7 @@ def get_histogram(probas: np.ndarray, list_classes: List[str]) -> Tuple[pd.DataF
     # Get dataframe
     max_proba = max(probas)
     predicted = ['Accepted' if proba == max_proba else 'Rejected' for proba in probas]
-    df_probabilities = pd.DataFrame({'classes': list_classes, 'probabilités': probas, 'result': predicted})
+    df_probabilities = pd.DataFrame({'classes': list_classes, 'probabilities': probas, 'result': predicted})
 
     # Prepare plot
     domain = ['Accepted', 'Rejected']
@@ -350,15 +356,15 @@ def get_histogram(probas: np.ndarray, list_classes: List[str]) -> Tuple[pd.DataF
         alt.Chart(df_probabilities, width=720, height=80 * len(list_classes))
         .mark_bar()
         .encode(
-            x=alt.X('probabilités:Q', scale=alt.Scale(domain=(0, 1))),
+            x=alt.X('probabilities:Q', scale=alt.Scale(domain=(0, 1))),
             y='classes:O',
             color=alt.Color('result', scale=alt.Scale(domain=domain, range=range_)),
-            tooltip=['probabilités:Q', 'classes:O'],
+            tooltip=['probabilities:Q', 'classes:O'],
         )
     )
     # Nudges text to the right so it does not appear on top of the bar
     text = bars.mark_text(align='left', baseline='middle', dx=3)\
-               .encode(text=alt.Text('probabilités:Q', format='.2f'))
+               .encode(text=alt.Text('probabilities:Q', format='.2f'))
 
     return df_probabilities, alt.layer(bars + text)
 

@@ -1,4 +1,13 @@
-# **\*\*WORK IN PROGRESS - UPDATE COMING SOON \*\***
+[![pypi badge](https://img.shields.io/pypi/v/gabarit.svg)](https://pypi.python.org/pypi/gabarit)
+![NLP tests](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/nlp_build_tests.yaml/badge.svg)
+![NUM tests](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/num_build_tests.yaml/badge.svg)
+![VISION tests](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/vision_build_tests.yaml/badge.svg)
+![NLP wheel](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/nlp_wheel.yaml/badge.svg)
+![NUM wheel](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/num_wheel.yaml/badge.svg)
+![VISION wheel](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/vision_wheel.yaml/badge.svg)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Generic badge](https://img.shields.io/badge/python-3.7|3.8-blue.svg)](https://shields.io/)
+
 
 ![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/nlp_build_tests.yaml/badge.svg)
 ![example workflow](https://github.com/OSS-Pole-Emploi/AI_frameworks/actions/workflows/num_build_tests.yaml/badge.svg)
@@ -9,9 +18,13 @@ words_n_fun
 
 # Gabarit - Templates Data Science - Agence Data Services
 
+---
+
 # Licence
 
 This project is distributed under the GNU AFFERO GENERAL PUBLIC LICENSE V3.0. Please check the LICENSE file.
+
+---
 
 # Table of Contents
 - [1. Philosophy](#philosophy)
