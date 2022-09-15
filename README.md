@@ -7,6 +7,7 @@
 ![VISION wheel](https://github.com/OSS-Pole-Emploi/gabarit/actions/workflows/vision_wheel.yaml/badge.svg)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Generic badge](https://img.shields.io/badge/python-3.7|3.8-blue.svg)](https://shields.io/)
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/LexABzH/c2195d866139fdf6c69b4c1a190715eb/raw/test.json)
 
 
 # Gabarit - Templates Data Science
