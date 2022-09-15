@@ -1,0 +1,23 @@
+name: Badge test
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Awesome Badge
+        uses: schneegans/dynamic-badges-action@v1.4.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: c2195d866139fdf6c69b4c1a190715eb
+          filename: test.json
+          label: Hello
+          message: World
+          color: blue
+          
+          
